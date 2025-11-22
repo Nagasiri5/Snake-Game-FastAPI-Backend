@@ -4,7 +4,7 @@ const ctx = canvas.getContext('2d');
 const scoreEl = document.getElementById('score');
 const resetBtn = document.getElementById('reset');
 
-const ws = new WebSocket('ws://13.235.135.9:8000/ws');
+const ws = new WebSocket('ws://13.235.135.9/ws');
 let state = null;
 
 ws.onopen = () => console.log('ws open');
@@ -51,3 +51,4 @@ window.addEventListener('keydown', e => {
 
 
 resetBtn.addEventListener('click', () => ws.send(JSON.stringify({type:'reset'})));
+
