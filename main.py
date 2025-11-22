@@ -1,10 +1,19 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect   # FastAPI → main framework, WebSocket → real-time 2-way connection (browser ↔ server)
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles    # StaticFiles → serve HTML, JS, CSS files
 from fastapi.responses import HTMLResponse     # HTMLResponse → send index.html as response
 import asyncio                                 # asyncio → async tasks (game update)
 from game import SnakeGame
 
 app = FastAPI()    # FastAPI Initialization
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Or restrict to your S3 domain
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.mount('/static', StaticFiles(directory='static'), name='static')  # Serve HTML/JS/CSS from static/ folder
 
 # Single-player demo: one game per websocket connection
@@ -47,4 +56,5 @@ async def websocket_endpoint(websocket: WebSocket):
         sender_task.cancel()
     except Exception:
         sender_task.cancel()
+
         await websocket.close()
